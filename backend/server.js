@@ -11,11 +11,10 @@ app.use(cors());
 
 const PORT = 5000;
 
-// Fix __dirname for ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure output directory exists
+// Ensure output dir exists, if it doesnt, it creates output dir
 const ensureDirExists = (relativePath) => {
     const dirPath = path.join(__dirname, relativePath);
     if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
