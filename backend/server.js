@@ -14,41 +14,59 @@ const PORT = 5000;
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Ensure output dir exists, if it doesnt, it creates output dir
+// Ensure output directories exist
 const ensureDirExists = (relativePath) => {
     const dirPath = path.join(__dirname, relativePath);
     if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
 };
-ensureDirExists("output/jsons");
+ensureDirExists("../uploads");
+ensureDirExists("../output/jsons");
+ensureDirExists("../output/images");
 
 // Path to the Bash script
-const scriptPath = "bash.sh"
+const scriptPath = "bash.sh";
 
-// Multer setup (store files in the root directory)
+// Multer setup for multiple files
 const upload = multer({ dest: "../uploads" });
 
-app.post("/upload", upload.single("image"), (req, res) => {
-    if (!req.file) return res.status(400).json({ error: "No file uploaded" });
-
-    // Rename file to include .jpg extension
-    const newImagePath = path.join(__dirname, `../uploads/${req.file.filename}.jpg`);
-    fs.renameSync(req.file.path, newImagePath);
-
-    console.log("✅ Uploaded Image Path:", newImagePath);
-
-    if (!fs.existsSync(newImagePath)) {
-        return res.status(500).json({ error: "Uploaded file not found" });
+app.post("/upload", upload.array("images"), (req, res) => {
+    if (!req.files || req.files.length === 0) {
+        return res.status(400).json({ error: "No files uploaded" });
     }
 
-    // Run the Bash script
-    const command = `bash "${scriptPath}" "${newImagePath}"`;
-    console.log("🔹 Running Bash Script:", command);
+    let processedCount = 0;
+    const results = [];
 
-    exec(command, (error, stdout, stderr) => {
-        if (error) return res.status(500).json({ error: error.message });
-        if (stderr) return res.status(500).json({ error: stderr });
+    req.files.forEach((file) => {
+        const newImagePath = path.join(__dirname, `../uploads/${file.filename}.jpg`);
+        fs.renameSync(file.path, newImagePath);
 
-        res.json({ message: "Image processed successfully", output: stdout });
+        console.log("✅ Uploaded Image Path:", newImagePath);
+
+        if (!fs.existsSync(newImagePath)) {
+            return res.status(500).json({ error: `Uploaded file not found: ${file.originalname}` });
+        }
+
+        // Run Bash script for each image
+        const command = `bash \"${scriptPath}\" \"${newImagePath}\"`;
+        console.log("🔹 Running Bash Script:", command);
+
+        exec(command, (error, stdout, stderr) => {
+            processedCount++;
+
+            if (error) {
+                results.push({ file: file.originalname, error: error.message });
+            } else if (stderr) {
+                results.push({ file: file.originalname, error: stderr });
+            } else {
+                results.push({ file: file.originalname, message: "Processed successfully", output: stdout });
+            }
+
+            // Send response only when all files are processed
+            if (processedCount === req.files.length) {
+                res.json({ message: "All files processed", results });
+            }
+        });
     });
 });
 
