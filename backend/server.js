@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import multer from "multer";
-import { exec } from "child_process";
+import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
@@ -29,6 +29,32 @@ const scriptPath = "bash.sh";
 // Multer setup for multiple files
 const upload = multer({ dest: "../uploads" });
 
+// Function to execute Bash script and log output
+const runBashScript = (imagePath, callback) => {
+    console.log(`🔹 Running Bash Script: bash ${scriptPath} ${imagePath}`);
+
+    const process = spawn("bash", [scriptPath, imagePath]);
+
+    let stdoutData = "";
+    let stderrData = "";
+
+    process.stdout.on("data", (data) => {
+        stdoutData += data.toString();
+        console.log(`📢 [BASH OUTPUT]: ${data.toString().trim()}`);
+    });
+
+    process.stderr.on("data", (data) => {
+        stderrData += data.toString();
+        console.error(`⚠️ [BASH ERROR]: ${data.toString().trim()}`);
+    });
+
+    process.on("close", (code) => {
+        console.log(`✅ [BASH EXIT CODE]: ${code}`);
+        callback(code === 0 ? null : new Error(`Exit code ${code}`), stdoutData, stderrData);
+    });
+};
+
+// Handle file upload
 app.post("/upload", upload.array("images"), (req, res) => {
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: "No files uploaded" });
@@ -38,7 +64,7 @@ app.post("/upload", upload.array("images"), (req, res) => {
     const results = [];
 
     req.files.forEach((file) => {
-        const newImagePath = path.join(__dirname, `../uploads/${file.filename}.jpg`);
+        const newImagePath = path.join(__dirname, `../uploads/${file.filename}.jpg`).replace(/\\/g, "/");
         fs.renameSync(file.path, newImagePath);
 
         console.log("✅ Uploaded Image Path:", newImagePath);
@@ -47,11 +73,8 @@ app.post("/upload", upload.array("images"), (req, res) => {
             return res.status(500).json({ error: `Uploaded file not found: ${file.originalname}` });
         }
 
-        // Run Bash script for each image
-        const command = `bash \"${scriptPath}\" \"${newImagePath}\"`;
-        console.log("🔹 Running Bash Script:", command);
-
-        exec(command, (error, stdout, stderr) => {
+        // Execute Bash script
+        runBashScript(newImagePath, (error, stdout, stderr) => {
             processedCount++;
 
             if (error) {
