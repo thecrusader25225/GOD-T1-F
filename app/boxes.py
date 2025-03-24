@@ -1,51 +1,84 @@
 import cv2
 import json
-import json
 import math
 import sys
+import os
 
-# Read the response from output.json
-with open("../output/jsons/output.json", "r") as file:
-    response = json.load(file)
+# Ensure correct arguments
+if len(sys.argv) < 3:
+    print("Usage: python boxes.py <input_json> <input_image>")
+    sys.exit(1)
 
-#Get the IMAGE_PATH from bash
-if len(sys.argv) > 1:
-    image_path = sys.argv[1]
+input_json = sys.argv[1]
+input_image = sys.argv[2]
+
+print("input image: ",input_image,"input json:",input_json)
+# Extract base filename without extension
+base_name = os.path.splitext(os.path.basename(input_json))[0]
+print("basename: ", base_name)
+# Output paths
+processed_json_path = f"../output/jsons/{base_name}_processed.json"
+output_image_path = f"../output/images/{base_name}.jpg"
+
+print(f"🔍 Debug: Loading JSON from {input_json}")
+
+# Read the JSON response
+try:
+    with open(input_json, "r") as file:
+        response = json.load(file)
+except Exception as e:
+    print(f"❌ Error: Failed to load JSON - {e}")
+    sys.exit(1)
+
+# Ensure results exist
+if "results" not in response or "detections" not in response["results"]:
+    print(f"❌ Error: No detections found in {input_json}")
+    sys.exit(1)
 
 # Class mapping
 class_map = {0: "gauges", 1: "numbers"}
 
 # Convert response format
-detections = [
-    {
-        "label": class_map[d["class"]],
-        "confidence": d["confidence"],  # Keep original confidence value
+detections = []
+for d in response["results"]["detections"]:
+    if "class" not in d or "bbox" not in d or len(d["bbox"]) != 4:
+        print(f"⚠️ Skipping invalid detection: {d}")
+        continue
+    
+    detections.append({
+        "label": class_map.get(d["class"], "unknown"),
+        "confidence": d["confidence"],
         "bbox": [math.floor(d["bbox"][0]), math.floor(d["bbox"][1]), math.floor(d["bbox"][2]), math.floor(d["bbox"][3])]
-    }
-    for d in response["results"]["detections"]
-]
-# Save the file
-with open("../output/jsons/processed_output.json", "w") as file:
+    })
+
+print(f"✅ Detections processed: {len(detections)}")
+
+# Save processed JSON
+with open(processed_json_path, "w") as file:
     json.dump(detections, file, indent=4)
 
-
+print(f"✅ Processed JSON saved: {processed_json_path}")
 
 # Load the image
-image = cv2.imread(image_path)
+print(f"🔍 Debug: Trying to load image from {input_image}")
+image = cv2.imread(input_image)
+if image is None:
+    print(f"❌ Error: Unable to load image {input_image}")
+    sys.exit(1)
 
-# Iterate through detections and draw bounding boxes
+print(f"✅ Image loaded successfully: {input_image}")
+
+# Draw bounding boxes
 for det in detections:
     x1, y1, x2, y2 = det["bbox"]
     label = f"{det['label']} {det['confidence']:.2f}"
-    
-    # Draw rectangle (bounding box)
+
+    # Draw rectangle
     cv2.rectangle(image, (x1, y1), (x2, y2), (0, 255, 0), 2)
     
     # Put label
     cv2.putText(image, label, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
 
-# Save or display the image
-cv2.imwrite("../output/images/output.jpg", image)  # Save image
-cv2.imshow("Detected Image", image)  # Show image
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# Save the processed image
+cv2.imwrite(output_image_path, image)
+print(f"✅ Processed image saved: {output_image_path}")
