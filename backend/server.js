@@ -38,7 +38,7 @@ app.post("/upload", upload.array("images"), (req, res) => {
     const results = [];
 
     req.files.forEach((file) => {
-        const newImagePath =`../uploads/${file.filename}.jpg`
+        const newImagePath = path.join(__dirname, `../uploads/${file.filename}.jpg`);
         fs.renameSync(file.path, newImagePath);
 
         console.log("✅ Uploaded Image Path:", newImagePath);
@@ -48,7 +48,7 @@ app.post("/upload", upload.array("images"), (req, res) => {
         }
 
         // Run Bash script for each image
-        const command = `bash ${scriptPath} ${newImagePath}`;
+        const command = `bash \"${scriptPath}\" \"${newImagePath}\"`;
         console.log("🔹 Running Bash Script:", command);
 
         exec(command, (error, stdout, stderr) => {
