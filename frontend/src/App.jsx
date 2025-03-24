@@ -13,7 +13,7 @@ const UploadPage = () => {
       formData.append("images", file);
     }
 
-    const response = await fetch("http://localhost:5000/upload", {
+    const response = await fetch(`${import.meta.env.VITE_URL}/upload`, {
       method: "POST",
       body: formData,
     });
