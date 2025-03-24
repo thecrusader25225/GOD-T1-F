@@ -1,0 +1,16 @@
+{
+    "builds": [
+        {
+            "src": "frontend/package.json",
+            "use": "@vercel/next"
+        }
+    ],
+    "ignoreBuildStep": [
+        "backend/**",
+        "app/**",
+        "models/**",
+        "output/**",
+        "uploads/**",
+        "samples/**"
+    ]
+}
