@@ -13,12 +13,13 @@ export default function App() {
     for (const file of files) {
       formData.append("images", file);
     }
-    const response = await fetch(`${import.meta.env.VITE_URL}/upload`, {
+    const response = await fetch(`http://localhost:5000/upload`, {
       method: "POST",
       body: formData,
     });
 
     const result = await response.json();
+    await loadImages()
     console.log("Upload result:", result);
   };
 
