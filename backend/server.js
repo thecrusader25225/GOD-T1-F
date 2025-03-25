@@ -5,6 +5,7 @@ import { spawn } from "child_process";
 import path from "path";
 import fs from "fs";
 import { fileURLToPath } from "url";
+import archiver from "archiver";
 
 const app = express();
 app.use(cors());
@@ -83,6 +84,24 @@ app.get("/list", (req, res) => {
         });
 });
 
+//download images
+app.get('/download', (req, res) => {
+    const zipFilePath = path.join(__dirname, '../zip/output_images.zip');
+    const output = fs.createWriteStream(zipFilePath);
+    const archive = archiver('zip', { zlib: { level: 9 } });
+
+    output.on('close', () => {
+        res.download(zipFilePath, '../zip/output_images.zip', (err) => {
+            if (err) console.error(err);
+            fs.unlinkSync(zipFilePath); // Delete zip after download
+        });
+    });
+
+    archive.pipe(output);
+    archive.directory(path.join(__dirname, '../output/images'), false);
+    archive.finalize();
+});
+
 // Handle file upload
 app.post("/upload", upload.array("images"), (req, res) => {
     if (!req.files || req.files.length === 0) {
@@ -121,6 +140,7 @@ app.post("/upload", upload.array("images"), (req, res) => {
         });
     });
 });
+
 
 // Start server
 app.listen(PORT, () => {
