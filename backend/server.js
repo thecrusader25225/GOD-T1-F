@@ -54,6 +54,35 @@ const runBashScript = (imagePath, callback) => {
     });
 };
 
+const original_image_path = path.join(__dirname, "../uploads");
+const output_image_path=path.join(__dirname, '../output/images')
+
+app.use("/output-images", express.static(output_image_path));
+app.use("/original-images", express.static(original_image_path))
+
+app.get("/list", (req, res) => {
+
+    const getFiles = (folder) => {
+        return new Promise((resolve, reject) => {
+            fs.readdir(folder, (err, files) => {
+                if (err) reject(err);
+                else resolve(files);
+            });
+        });
+    };
+
+    Promise.all([getFiles(output_image_path), getFiles(original_image_path)])
+        .then(([outputImages, originalImages]) => {
+            res.json({
+                outputImages,   // 🖼️ Processed images
+                originalImages  // 📷 Uploaded images
+            });
+        })
+        .catch((error) => {
+            res.status(500).json({ error: "Error reading directories" });
+        });
+});
+
 // Handle file upload
 app.post("/upload", upload.array("images"), (req, res) => {
     if (!req.files || req.files.length === 0) {
