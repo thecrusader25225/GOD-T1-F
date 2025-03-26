@@ -8,11 +8,7 @@ import { fileURLToPath } from "url";
 import archiver from "archiver";
 
 const app = express();
-app.use(cors({
-    origin: '*', // Allows all origins (change this to specific origin if needed)
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
-}));
+app.use(cors())
 
 const PORT = 5000;
 

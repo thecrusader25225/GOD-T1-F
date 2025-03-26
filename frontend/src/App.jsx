@@ -3,9 +3,10 @@ export default function App() {
   const [files, setFiles] = useState([]);
   const [originalImages, setOriginalImages] = useState([]);
   const [outputImages, setOutputImages] = useState([]);
+  const [isUploaded, setIsUploaded] = useState(false)
   const [isShowingImages, setIsShowingImages] = useState(false);
   const [countFiles, setCountFiles] = useState(0);
-  const [URL, _] = useState(import.meta.env.VITE_URL)
+  const [URL, _] = useState('http://localhost:5000')
 
   const handleFileChange = (event) => {
     setFiles(event.target.files);
@@ -26,6 +27,7 @@ export default function App() {
     const result = await response.json();
     await loadImages();
     console.log("Upload result:", result);
+    setIsUploaded(true)
   };
 
   const loadImages = async () => {
@@ -36,7 +38,7 @@ export default function App() {
 
       setOutputImages(data.outputImages);
       setOriginalImages(data.originalImages);
-      setIsShowingImages(true);
+      setIsShowingImages(true)
     } catch (error) {
       console.error("Error fetching images:", error);
     }
@@ -54,7 +56,7 @@ export default function App() {
   return (
     <div className="w-screen h-screen flex flex-col items-center bg-gray-800 text-white overflow-hidden">
       <div className="w-3/4 h-12 flex border items-center justify-around">
-        {isShowingImages && (
+        {(isUploaded || isShowingImages) && (
           <button className="underline" onClick={() => window.location.reload()}>
             Upload more
           </button>
@@ -69,13 +71,13 @@ export default function App() {
           className="hidden"
         />
         <label
-          className={`text-center ${!isShowingImages && "underline cursor-pointer"}`}
+          className={`text-center ${!isUploaded && "underline cursor-pointer"}`}
           htmlFor="fileInput"
         >
-          {isShowingImages ? "Files Uploaded successfully!" : "Click to Upload File(s)"}
+          {isUploaded ? "Files Uploaded successfully!" : !isShowingImages && "Click to Upload File(s)"}
         </label>
 
-        <p>Files selected: {countFiles}</p>
+        {!isShowingImages && <p>Files selected: {countFiles}</p>}
 
         {isShowingImages ? (
           <button className="underline" onClick={handleDownloadAll}>
