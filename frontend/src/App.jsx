@@ -18,7 +18,7 @@ export default function App() {
     for (const file of files) {
       formData.append("images", file);
     }
-    const response = await fetch(`URL/upload`, {
+    const response = await fetch(`${URL}/upload`, {
       method: "POST",
       body: formData,
     });
@@ -30,7 +30,7 @@ export default function App() {
 
   const loadImages = async () => {
     try {
-      const res = await fetch(`URL/list`);
+      const res = await fetch(`${URL}/list`);
       const data = await res.json();
       console.log("Fetched images:", data);
 
@@ -44,7 +44,7 @@ export default function App() {
 
   const handleDownloadAll = async () => {
     const link = document.createElement("a");
-    link.href = `URL/download`;
+    link.href = `${URL}/download`;
     link.setAttribute("download", "output_images.zip");
     document.body.appendChild(link);
     link.click();
@@ -106,7 +106,7 @@ export default function App() {
                   <td className="border border-gray-500 px-4 py-2">
                     <img
                       className="w-96 h-w-96 object-cover rounded-lg"
-                      src={`URL/original-images/${image}`}
+                      src={`${URL}/original-images/${image}`}
                       alt={image}
                     />
                   </td>
@@ -114,7 +114,7 @@ export default function App() {
                     {outputImages[index] ? (
                       <img
                         className="w-96 h-w-96 object-cover rounded-lg"
-                        src={`URL/output-images/${outputImages[index]}`}
+                        src={`${URL}/output-images/${outputImages[index]}`}
                         alt={outputImages[index]}
                       />
                     ) : (
