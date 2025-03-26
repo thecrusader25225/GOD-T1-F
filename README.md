@@ -1,89 +1,62 @@
-# YOLOv8 API Deployment
+# GOD-T1-F
 
-## Overview
-This project provides an API for running YOLOv8 inference. The API is containerized using Docker and deployed on Azure for seamless access by the web development team.
+This project consists of a **YOLOv8 object detection API** running in a **Docker container**, along with a **frontend (React + Vite)** and a **backend (Node.js + Express)** to interact with it.
 
-## Project Structure
-```
-.
-├── Dockerfile          # Defines the container setup
-├── main.py            # FastAPI application
-├── model.py           # Model loading and inference logic
-├── util.py            # Helper functions
-├── requirements.txt   # Dependencies
-└── README.md          # This documentation
-```
+## 🚀 Getting Started
 
-## Prerequisites
-Before deploying, ensure you have:
-- **Azure CLI** installed and logged in
-- **Docker** installed and running
-- An **Azure Container Registry (ACR)**
+Follow these steps to set up and run the project.
 
-## Local Setup
-To build and run the API locally:
+### 1️⃣ Running YOLOv8 API in Docker
+
+First, build and run the **YOLOv8 model** inside a Docker container:
+
 ```sh
 docker build -t yolov8-api .
 docker run --rm -p 8000:8000 yolov8-api
 ```
-The API will be accessible at `http://localhost:8000`.
 
-## Deploying to Azure
-### 1. Create an Azure Container Registry (ACR)
+This starts the YOLOv8 API on http://localhost:8000.
+
+### 2️⃣ Cloning This Project
+
+Clone the repository to your local machine:
+
 ```sh
-az acr create --resource-group <your-resource-group> --name <your-acr-name> --sku Basic
-az acr login --name <your-acr-name>
+git clone https://github.com/thecrusader25225/GOD-T1-F.git
+cd GOD-T1-F
 ```
 
-### 2. Build and Push Docker Image to ACR
+### 3️. Installing Dependencies
+
+Navigate to both the frontend and backend folders separately and install dependencies:
+
 ```sh
-docker tag yolov8-api <your-acr-name>.azurecr.io/yolov8-api:v1
-docker push <your-acr-name>.azurecr.io/yolov8-api:v1
+cd backend
+npm i
 ```
-
-### 3. Deploy to Azure App Service
 ```sh
-az appservice plan create --name yolov8-plan --resource-group <your-resource-group> --sku B1 --is-linux
-az webapp create --resource-group <your-resource-group> --plan yolov8-plan --name <your-app-name> --deployment-container-image-name <your-acr-name>.azurecr.io/yolov8-api:v1
+cd frontend
+npm i
 ```
 
-### 4. Get the Public API URL
+### 4. Running Node.js backend server
+
 ```sh
-az webapp show --resource-group <your-resource-group> --name <your-app-name> --query defaultHostName -o tsv
-```
-This will return a URL like:
-```
-yolov8-api.azurewebsites.net
-```
-Share this URL with the web development team.
-
-## API Endpoints
-### 1. Health Check
-```http
-GET /
-```
-Response:
-```json
-{"message": "API is running"}
+cd backend
+node server.js
 ```
 
-### 2. Run Inference
-```http
-POST /predict
-```
-Request (multipart form-data):
-- `file`: Image file for prediction
+This will run the backend at http://localhost:5000.
 
-Response:
-```json
-{
-  "predictions": [
-    {"class": "gauge", "confidence": 0.92, "bbox": [x, y, w, h]}
-  ]
-}
+### 5. Running the Vite Development Server
+
+```sh
+cd frontend
+npm run dev
 ```
 
-## Future Improvements
-- Implement authentication for secure access
-- Enable automatic model updates
-- Set up CI/CD for automated deployments
+This will run the frontend at http://localhost:5173.
+
+## 🔮 Future Goals
+
+- **Expose the backend API** so that a remote PC can access it.
