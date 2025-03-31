@@ -11,7 +11,6 @@ export default function App() {
   const handleFileChange = (event) => {
     setFiles(event.target.files);
     setCountFiles(event.target.files.length);
-    console.log(import.meta.env.VITE_URL);
   };
 
   const handleUpload = async () => {
