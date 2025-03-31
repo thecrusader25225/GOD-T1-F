@@ -29,8 +29,8 @@ with open(json_path, "r") as file:
 
 # Extract filename for processed output
 base_name = os.path.splitext(os.path.basename(json_path))[0]
-processed_json_path = f"../output/jsons/{base_name}_processed.json"
-output_image_path = f"../output/images/{base_name}.jpg"
+processed_json_path = f"../prod/output/jsons/{base_name}_processed.json"
+output_image_path = f"../prod/output/images/{base_name}.jpg"
 
 # Class mapping
 class_map = {0: "gauges", 1: "numbers"}
