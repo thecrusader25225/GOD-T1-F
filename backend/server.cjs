@@ -11,22 +11,13 @@ app.use(cors());
 
 const PORT = 5000;
 
-// Utility function to ensure directories exist
-// const ensureDirExists = (dirPath) => {
-//     if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
-// };
-
 // Define absolute paths
-const UPLOADS_DIR = path.join(process.cwd(), "uploads");
-const OUTPUT_JSONS_DIR = path.join(process.cwd(), "output", "jsons");
-const OUTPUT_IMAGES_DIR = path.join(process.cwd(), "output", "images");
-const FRONTEND_DIST_DIR = path.join(process.cwd(), "frontend", "dist");
-
-// Ensure directories exist
-// [UPLOADS_DIR, OUTPUT_JSONS_DIR, OUTPUT_IMAGES_DIR].forEach(ensureDirExists);
-
+const UPLOADS_DIR = path.join(process.cwd(), "..", "prod","uploads");
+const OUTPUT_JSONS_DIR = path.join(process.cwd(), "..", "prod","output", "jsons");
+const OUTPUT_IMAGES_DIR = path.join(process.cwd(), "..", "prod","output", "images");
+const FRONTEND_DIST_DIR = path.join(process.cwd(), "..", "prod", "frontend", "dist");
 // Path to the Bash script
-const SCRIPT_PATH = path.resolve(__dirname, "bash.sh");
+const SCRIPT_PATH = path.join(process.cwd(), "..","bash.sh")
 
 // Multer setup for file uploads
 const upload = multer({ dest: UPLOADS_DIR });
@@ -76,7 +67,6 @@ app.get("/list", async (req, res) => {
 // Download images
 app.get('/download', (req, res) => {
     const zipFilePath = path.resolve(__dirname, "..", "zip", "output_images.zip");
-    // ensureDirExists(path.dirname(zipFilePath));
 
     const output = fs.createWriteStream(zipFilePath);
     const archive = archiver("zip", { zlib: { level: 9 } });
