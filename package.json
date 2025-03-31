@@ -47,7 +47,9 @@
         "targets": [
             "node18-win-x64"
         ],
-        "scripts": "backend/server.js",
+        "scripts": [
+            "backend/server.js"
+        ],
         "assets": [
             "backend/server.js",
             "frontend/dist/**/*"
