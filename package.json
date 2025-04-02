@@ -5,12 +5,11 @@
     "type": "module",
     "scripts": {
         "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-        "dev:backend": "cd backend && node server.cjs",
+        "dev:backend": "node backend/server.cjs",
         "dev:frontend": "cd frontend && vite",
-        "build": "npm run build:frontend && npm run build:backend",
+        "build": "npm run build:frontend",
         "build:frontend": "cd frontend && vite build",
-        "build:backend": "cd backend && pkg server.cjs --output backend.exe",
-        "start": "cd backend && ./backend.exe"
+        "start": "node backend/server.cjs"
     },
     "dependencies": {
         "@tailwindcss/vite": "^4.0.2",

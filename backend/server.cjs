@@ -12,12 +12,12 @@ app.use(cors());
 const PORT = 5000;
 
 // Define absolute paths
-const UPLOADS_DIR = path.join(process.cwd(), "..", "prod","uploads");
-const OUTPUT_JSONS_DIR = path.join(process.cwd(), "..", "prod","output", "jsons");
-const OUTPUT_IMAGES_DIR = path.join(process.cwd(), "..", "prod","output", "images");
-const FRONTEND_DIST_DIR = path.join(process.cwd(), "..", "prod", "frontend", "dist");
+const UPLOADS_DIR = path.join(process.cwd(), "uploads");
+const OUTPUT_JSONS_DIR = path.join(process.cwd(), "output", "jsons");
+const OUTPUT_IMAGES_DIR = path.join(process.cwd(), "output", "images");
+const FRONTEND_DIST_DIR = path.join(process.cwd(),  "frontend", "dist");
 // Path to the Bash script
-const SCRIPT_PATH = path.join(process.cwd(), "..","bash.sh")
+const SCRIPT_PATH = path.join(process.cwd(),"bash.sh")
 
 // Multer setup for file uploads
 const upload = multer({ dest: UPLOADS_DIR });

@@ -8,12 +8,12 @@ IMAGE_PATH="$1"
 FILENAME=$(basename -- "$IMAGE_PATH")
 NAME="${FILENAME%.*}"
 
-OUTPUT_JSON="$BASE_DIR/prod/output/jsons/${NAME}.json"
-OUTPUT_IMAGE="$BASE_DIR/prod/output/images/${NAME}.jpg"
+OUTPUT_JSON="$BASE_DIR/output/jsons/${NAME}.json"
+OUTPUT_IMAGE="$BASE_DIR/output/images/${NAME}.jpg"
 
 # Ensure output directories exist
-mkdir -p "$BASE_DIR/prod/output/jsons"
-mkdir -p "$BASE_DIR/prod/output/images"
+mkdir -p "$BASE_DIR/output/jsons"
+mkdir -p "$BASE_DIR/output/images"
 
 echo "Processing: $IMAGE_PATH"
 echo "Saving JSON to: $OUTPUT_JSON"
