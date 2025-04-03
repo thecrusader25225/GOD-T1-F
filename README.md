@@ -32,10 +32,15 @@ cd GOD-T1-F
 npm i
 ```
 
+#### 4. Building Static Files
+
+```sh
+npm run build
+```
 
 ### For Development
 
-#### 4. Running Node.js backend server
+#### 5. Running Node.js backend server
 
 ```sh
 cd backend
@@ -46,7 +51,7 @@ This will run the backend at http://localhost:5000 and as well as serve static f
 
 ### For Production:
 
-#### 4. Start Node.js server using PM2
+#### 5. Start Node.js server using PM2
 
 ```sh
 cd backend
@@ -55,7 +60,7 @@ pm2 start server.cjs --name server
 
 This will run PM2 process manager for the application keeping application running in production.
 
-#### 5. Use ngrok to expose the server for public use
+#### 6. Use ngrok to expose the server for public use
 
 Install ngrok and open its terminal and expose port 5000
 
