@@ -28,6 +28,6 @@ echo "✅ Prediction complete. Output saved to $OUTPUT_JSON"
 
 # Run Python script for bounding boxes
 echo "Running boxes.py..."
-python "$BASE_DIR/app/boxes.py" "$OUTPUT_JSON" "$IMAGE_PATH"
+python "$BASE_DIR/app/boxes.py" "$OUTPUT_JSON" "$IMAGE_PATH" 
 
 set +x  
