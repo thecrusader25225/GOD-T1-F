@@ -6,7 +6,7 @@ This project consists of a **YOLOv8 object detection API** running in a **Docker
 
 Follow these steps to set up and run the project.
 
-### 1️. Running YOLOv8 API in Docker
+#### 1️. Running YOLOv8 API in Docker
 
 First, build and run the **YOLOv8 model** inside a Docker container:
 
@@ -17,7 +17,7 @@ docker run --rm -p 8000:8000 yolov8-api
 
 This starts the YOLOv8 API on http://localhost:8000.
 
-### 2️. Cloning This Project
+#### 2️. Cloning This Project
 
 Clone the repository to your local machine:
 
@@ -26,16 +26,16 @@ git clone https://github.com/thecrusader25225/GOD-T1-F.git
 cd GOD-T1-F
 ```
 
-### 3️. Installing Dependencies
+#### 3️. Installing Dependencies
 
 ```sh
 npm i
 ```
 
 
-## For Development
+### For Development
 
-### 4. Running Node.js backend server
+#### 4. Running Node.js backend server
 
 ```sh
 cd backend
@@ -44,9 +44,9 @@ node server.cjs
 
 This will run the backend at http://localhost:5000 and as well as serve static frontend at http://localhost:5000
 
-## For Production:
+### For Production:
 
-### 4. Start Node.js server using PM2
+#### 4. Start Node.js server using PM2
 
 ```sh
 cd backend
@@ -55,7 +55,7 @@ pm2 start server.cjs --name server
 
 This will run PM2 process manager for the application keeping application running in production.
 
-### 5. Use ngrok to expose the server for public use
+#### 5. Use ngrok to expose the server for public use
 
 Install ngrok and open its terminal and expose port 5000
 
