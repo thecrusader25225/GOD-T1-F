@@ -6,7 +6,7 @@ This project consists of a **YOLOv8 object detection API** running in a **Docker
 
 Follow these steps to set up and run the project.
 
-### 1️⃣ Running YOLOv8 API in Docker
+### 1️. Running YOLOv8 API in Docker
 
 First, build and run the **YOLOv8 model** inside a Docker container:
 
@@ -17,7 +17,7 @@ docker run --rm -p 8000:8000 yolov8-api
 
 This starts the YOLOv8 API on http://localhost:8000.
 
-### 2️⃣ Cloning This Project
+### 2️. Cloning This Project
 
 Clone the repository to your local machine:
 
@@ -28,35 +28,39 @@ cd GOD-T1-F
 
 ### 3️. Installing Dependencies
 
-Navigate to both the frontend and backend folders separately and install dependencies:
+```sh
+npm i
+```
 
-```sh
-cd backend
-npm i
-```
-```sh
-cd frontend
-npm i
-```
+
+## For Development
 
 ### 4. Running Node.js backend server
 
 ```sh
 cd backend
-node server.js
+node server.cjs
 ```
 
-This will run the backend at http://localhost:5000.
+This will run the backend at http://localhost:5000 and as well as serve static frontend at http://localhost:5000
 
-### 5. Running the Vite Development Server
+## For Production:
+
+### 4. Start Node.js server using PM2
 
 ```sh
-cd frontend
-npm run dev
+cd backend
+pm2 start server.cjs --name server
 ```
 
-This will run the frontend at http://localhost:5173.
+This will run PM2 process manager for the application keeping application running in production.
 
-## 🔮 Future Goals
+### 5. Use ngrok to expose the server for public use
 
-- **Expose the backend API** so that a remote PC can access it.
+Install ngrok and open its terminal and expose port 5000
+
+```sh
+ngrok http 5000
+```
+
+You can access then access the application from the URL it will generate.
