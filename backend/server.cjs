@@ -12,10 +12,10 @@ app.use(cors());
 const PORT = 5000;
 
 // Define absolute paths
-const UPLOADS_DIR = path.join(process.cwd(), "uploads");
-const OUTPUT_JSONS_DIR = path.join(process.cwd(), "output", "jsons");
-const OUTPUT_IMAGES_DIR = path.join(process.cwd(), "output", "images");
-const FRONTEND_DIST_DIR = path.join(process.cwd(),  "frontend", "dist");
+const UPLOADS_DIR = path.join(process.cwd(), "..","uploads");
+const OUTPUT_JSONS_DIR = path.join(process.cwd(), "..","output", "jsons");
+const OUTPUT_IMAGES_DIR = path.join(process.cwd(), "..","output", "images");
+const FRONTEND_DIST_DIR = path.join(process.cwd(),  "..","frontend", "dist");
 // Path to the Bash script
 const SCRIPT_PATH = path.join(process.cwd(),"bash.sh")
 
